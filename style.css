@@ -4,7 +4,7 @@
 }
 
 body {
-    background-color: #777777;
+    background-color: black;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -18,14 +18,14 @@ main {
 section {
     width: 20%;
     height: 80%;
-    border: solid red 2px;
+    /* border: solid red 2px; */
 }
 aside {
     width: 20%;
     height: 80%;
-    border: solid red 2px;
+    /* border: solid red 2px; */
 }
 .bar {
     position: relative;
-    background-color: red;
+    background-color: blue;
 }
