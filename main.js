@@ -12,7 +12,7 @@ const gameWidth = gameScreen.clientWidth
 
 function setDefaultBars(){
     for (barNumber = 0; barNumber < 2; barNumber++){
-        players[barNumber].width = gameWidth/5,                                         
+        players[barNumber].width = gameWidth/10,                                         
         players[barNumber].height = gameScreen.clientHeight/100,
         players[barNumber].positionX = gameWidth/2,
         players[barNumber].velocity = gameWidth/100
@@ -25,31 +25,37 @@ function setBarsStyle() {
     for (barNumber = 0; barNumber < 2; barNumber++){
         bars[barNumber].style.width = `${players[barNumber].width}px`
         bars[barNumber].style.height =  `${players[barNumber].height}px`
+        // bars[barNumber].style.left = `${players[barNumber].positionX-player1.width/2}px`
         bars[barNumber].style.left = `${players[barNumber].positionX-player1.width/2}px`
         bars[barNumber].style.top = `${players[barNumber].positionY}px`
     }
 }
 
 function movePlayer(player, direction) {
-    const gameLimit = gameWidth / 2 + (gameWidth / 2 * direction - player.width / 2) - player.velocity
-    const playerCollided = (player.positionX*direction <= gameLimit)
+    const playerNextLocation = player.positionX*direction + player.velocity
+    const gameLimit = gameWidth / 2 + (gameWidth / 2 * direction)
+    const gameLimitAdjust = gameLimit - player.width / 2
+    const playerCollided = (playerNextLocation >= gameLimitAdjust)
     if (playerCollided) {
-        player.positionX += player.velocity*direction
-        // player.positionX = gameLimit
+        player.positionX = gameLimit-player.width/2*direction
+    }
+    else {
+        player.positionX = playerNextLocation*direction
     }
 }
+//OBRIGADO SOR
 
 const keyActions = {
-    key_arrowleft(){
+    ArrowLeft(){
         movePlayer(player1, direction = -1)
     },
-    key_arrowright(){
+    ArrowRight(){
         movePlayer(player1, direction = 1)
     },
-    key_a(){
+    KeyA(){
         movePlayer(player2, direction = -1)
     },
-    key_d(){
+    KeyD(){
         movePlayer(player2, direction = 1)
     }
 }
@@ -58,16 +64,16 @@ const keyActions = {
 const handleKeys = {}
 
 document.addEventListener('keydown', (keyDownEvent) => {
-    const keyPressed = `key_${keyDownEvent.key.toLowerCase()}`
+    const keyPressed = keyDownEvent.code
     const keyPressedActionExists = keyActions[keyPressed]
     if (keyPressedActionExists) {
+        console.log(keyPressed);
         handleKeys[keyPressed] = keyPressed
     }
 })
 
 document.addEventListener('keyup', (keyUpEvent) => {
-    let keyPressed = `key_${keyUpEvent.key}`
-    keyPressed = keyPressed.toLowerCase()
+    const keyPressed = keyUpEvent.code
     delete handleKeys[keyPressed]
 })
 
@@ -77,5 +83,5 @@ setInterval(function gameFrames() {
         keyActions[keyHandled]()
     }
     setBarsStyle()
-},10)
+},30)
 setDefaultBars()    
