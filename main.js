@@ -43,7 +43,7 @@ function movePlayer(player, direction) {
         player.positionX = playerNextLocation*direction
     }
 }
-//OBRIGADO SOR
+//OBRIGADO SOR ROGER
 
 const keyActions = {
     ArrowLeft(){
