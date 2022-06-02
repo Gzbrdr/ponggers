@@ -67,7 +67,6 @@ document.addEventListener('keydown', (keyDownEvent) => {
     const keyPressed = keyDownEvent.code
     const keyPressedActionExists = keyActions[keyPressed]
     if (keyPressedActionExists) {
-        console.log(keyPressed);
         handleKeys[keyPressed] = keyPressed
     }
 })
