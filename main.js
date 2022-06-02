@@ -82,5 +82,5 @@ setInterval(function gameFrames() {
         keyActions[keyHandled]()
     }
     setBarsStyle()
-},30)
+},17)
 setDefaultBars()    
