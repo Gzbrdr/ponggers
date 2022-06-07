@@ -5,31 +5,36 @@ const bars = document.getElementsByClassName('bar')
 const gameWidth = gameScreen.clientWidth
 const gameHeight = gameScreen.clientHeight
 
-const player1 = {width: 0, height: 0, positionX: 0, positionY: 0, velocity: 0, strength: 1, points: 0, direction: 1}
-const player2 = {width: 0, height: 0, positionX: 0, positionY: 0, velocity: 0, strength: 1, points: 0, direction: -1}
+const player1 = {width: 0, height: 0, positionX: 0, positionY: 0, velocity: 0, strength: 1, points: 0}
+const player2 = {width: 0, height: 0, positionX: 0, positionY: 0, velocity: 0, strength: 1, points: 0}
 const players = [player1, player2]
 
-const ball = {
-    width: gameWidth/100,
-    height: gameWidth/100,
-    positionX: gameWidth/2, 
-    positionY: gameHeight/2,
-    velocityX: 0,
-    velocityY: gameWidth/100 - (gameWidth/100)/10,
-    startVelocityY: gameWidth/100 - (gameWidth/100)/10,
+const ball = {width: 0, height: 0, positionX: 0, positionY: 0, velocityX: 0, velocityY: 0, startVelocityY: 0, startDirection: 0}
+
+
+function setDefaultBall() {
+    ball.width = gameWidth/100
+    ball.height = gameWidth/100
+    ball.positionX = gameWidth/2,
+    ball.positionY = gameHeight/2
+    ball.velocityX = 0
+    ball.velocityY = 0
+    ball.startVelocityY = gameWidth/100 - (gameWidth/100)/10
+    ball.startDirection = 1
 }
 
-gameBall.style.width = (ball.width) + 'px'
-gameBall.style.height = (ball.height) + 'px'
-gameBall.style.left = (ball.positionX - ball.width/2) + 'px'
-gameBall.style.top = (ball.positionY - ball.width/2) + 'px'
-
 function startGame() {
+    setDefaultBall()
     setDefaultBars()
     setBarsStyle()
     setBallPosition()
 }
 startGame()
+
+gameBall.style.width = (ball.width) + 'px'
+gameBall.style.height = (ball.height) + 'px'
+gameBall.style.left = (ball.positionX - ball.width/2) + 'px'
+gameBall.style.top = (ball.positionY - ball.width/2) + 'px'
 
 function setDefaultBars(){
     for (barNumber = 0; barNumber < 2; barNumber++){
@@ -51,15 +56,6 @@ function setBarsStyle() {
     }
     bars[1].style.transform = `translateY(-${players[0].height}px)`
     bars[0].style.transform = `translateY(+${players[0].height*2}px)`
-}
-function setDefaultBall() {
-    ball.width = gameWidth/100
-    ball.height = gameWidth/100
-    ball.positionX = gameWidth/2,
-    ball.positionY = gameHeight/2
-    ball.velocityX = gameWidth/100
-    ball.velocityY = gameWidth/100 - (gameWidth/100)/2
-    ball.startVelocityY = gameWidth/100 - (gameWidth/100)/2
 }
 function setBallPosition() {
     gameBall.style.left = `${ball.positionX-ball.width/2}px`
@@ -95,6 +91,11 @@ const keyActions = {
     KeyD(){
         const right = 1
         movePlayer(player2, right)
+    },
+    KeyR() {
+        ball.velocityY = ball.startVelocityY/2*ball.startDirection
+        delete handleKeys['KeyR']
+        this.KeyR = null
     }
 }//OBRIGADO FILIPE DESCHAMPS
 
@@ -158,10 +159,19 @@ function checkBallCollisions() {
     }
     function ballPointsCollision() {
         if (!ballInsideGame) {
-            console.log(ball.positionY);
             setDefaultBall()
-            ball.velocityX = 0
-            ball.velocityY = 0
+            const player = playerByBallDirectionY(-directionY)
+            player.points += 1
+            ball.startDirection = directionY
+            keyActions['KeyR'] = () => {
+                ball.velocityY = ball.startVelocityY/2*ball.startDirection
+                delete handleKeys['KeyR']
+                this.KeyR = null
+            }
+            const player1points = document.getElementById('player1points')
+            const player2points = document.getElementById('player2points')
+            player1points.innerHTML = `${players[0].points}`
+            player2points.innerHTML = `${players[1].points}`
         }
     }
     ballPointsCollision()
